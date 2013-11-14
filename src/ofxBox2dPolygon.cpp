@@ -155,8 +155,10 @@ void ofxBox2dPolygon::triangulate(float resampleAmt, int nPointsInside) {
 
 //----------------------------------------
 void ofxBox2dPolygon::create(b2World * b2dworld) {
-
-	if(size() < 3) {
+    
+    int cachedSize = size();
+    
+	if(cachedSize < 3) {
 		printf("need at least 3 points\n");
 		return;	
 	}
@@ -200,7 +202,7 @@ void ofxBox2dPolygon::create(b2World * b2dworld) {
 	}
 	else {
 		if(bSetAsEdge) {
-			for (int i=1; i<size(); i++) {
+			for (int i=1; i<cachedSize; i++) {
 				b2PolygonShape	shape;
 				b2Vec2 a = screenPtToWorldPt(getVertices()[i-1]);
 				b2Vec2 b = screenPtToWorldPt(getVertices()[i]);
@@ -215,13 +217,13 @@ void ofxBox2dPolygon::create(b2World * b2dworld) {
 		}
 		else {
             vector<b2Vec2>verts;
-            verts.assign(size()-1, b2Vec2());
-			for (int i=0; i<size(); i++) {
+            verts.assign(cachedSize-1, b2Vec2());
+			for (int i=0; i<cachedSize; i++) {
 				ofVec2f p = getVertices()[i] / OFX_BOX2D_SCALE;
 				verts[i]  = b2Vec2(p.x, p.y);
 			}
 			b2PolygonShape	shape;
-			shape.Set(&verts[0], size()-1);
+			shape.Set(&verts[0], cachedSize-1);
 			
 			fixture.shape		= &shape;
 			fixture.density		= density;
